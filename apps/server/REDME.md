@@ -33,7 +33,7 @@ This server handles everything behind the scenes:
 
 ## Folder Structure
 
-```
+```bash
 server/
 ├── src/
 │   ├── routes/
@@ -115,9 +115,9 @@ npm run lint       # Run ESLint
 
 Takes resume file + job description, returns a tailored PDF.
 
-**Request**
+### Request
 
-```
+```bash
 Content-Type: multipart/form-data
 
 Fields:
@@ -125,9 +125,9 @@ Fields:
   - jobDescription: string
 ```
 
-**Response**
+### Response
 
-```
+```bash
 Content-Type: application/pdf
 
 Returns the PDF file as a binary buffer
@@ -137,7 +137,7 @@ Returns the PDF file as a binary buffer
 
 ## Request Flow
 
-```
+```bash
 POST /api/generate
   ↓
 upload.middleware.ts     → multer handles file upload

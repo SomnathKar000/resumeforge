@@ -28,7 +28,7 @@ This is the UI where the user:
 
 ## Folder Structure
 
-```
+```bash
 web/
 ├── public/
 ├── src/

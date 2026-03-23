@@ -12,7 +12,7 @@ ResumeForge is an AI-powered tool that takes your existing resume and a job desc
 
 ## How it works
 
-```
+```bash
 Upload Resume (PDF or DOCX)
         +
   Paste Job Description
@@ -43,15 +43,17 @@ Upload Resume (PDF or DOCX)
 
 ## Project Structure
 
-```
-resumeforge/
+```bash
+
+ResumeForge/
 ├── apps/
-│   ├── web/          # Frontend (React)
-│   └── server/       # Backend (Express)
-├── docs/             # Setup and architecture notes
+│ ├── web/ # Frontend (React)
+│ └── server/ # Backend (Express)
+├── docs/ # Setup and architecture notes
 ├── .gitignore
 ├── README.md
-└── package.json      # Root monorepo config
+└── package.json # Root monorepo config
+
 ```
 
 ---
