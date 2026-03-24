@@ -1,14 +1,16 @@
 {
-  "name": "resumeforge",
+  "name": "resume-forge",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "apps/server"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"npm run dev --workspace=apps/web\" \"npm run dev --workspace=apps/server\"",
+    "build": "concurrently \"npm run build --workspace=apps/web\" \"npm run build --workspace=apps/server\"",
+    "start": "concurrently \"npm run start --workspace=apps/web\" \"npm run start --workspace=apps/server\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "concurrently": "^9.2.1"
   }
