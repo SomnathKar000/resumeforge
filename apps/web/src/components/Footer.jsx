@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
     <footer className="bg-[#0e0e0e] w-full py-12 px-6 mt-auto">
@@ -11,17 +13,18 @@ export default function Footer() {
           </p>
         </div>
         <div className="flex gap-8">
-          <a className="font-body text-xs tracking-wide uppercase text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors" href="#">
+          <Link className="font-body text-xs tracking-wide uppercase text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors" to="/privacy">
             Privacy Policy
-          </a>
-          <a className="font-body text-xs tracking-wide uppercase text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors" href="#">
+          </Link>
+          <Link className="font-body text-xs tracking-wide uppercase text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors" to="/terms">
             Terms of Service
-          </a>
-          <a className="font-body text-xs tracking-wide uppercase text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors" href="#">
+          </Link>
+          <Link className="font-body text-xs tracking-wide uppercase text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors" to="/contact">
             Contact
-          </a>
+          </Link>
         </div>
       </div>
     </footer>
   );
 }
+
