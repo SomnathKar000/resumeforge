@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function TermsOfService() {
   const handleScrollTo = (e, id) => {
@@ -11,6 +13,7 @@ export default function TermsOfService() {
       className="font-body text-on-surface"
       style={{ backgroundColor: "#000000" }}
     >
+      <Navbar variant="full" />
       <main className="pt-32 pb-20 px-6 max-w-[1200px] mx-auto">
         {/* Hero Section */}
         <section className="text-center mb-24">
@@ -404,43 +407,7 @@ export default function TermsOfService() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#0e0e0e] w-full py-12 border-t border-[#c7c4d8]/15 mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center px-8 max-w-[1440px] mx-auto">
-          <div className="mb-6 md:mb-0">
-            <div className="text-[#c7c4d8] font-bold mb-2">ResumeForge</div>
-            <div className="text-xs uppercase tracking-widest text-[#c7c4d8]">
-              © 2024 ResumeForge. Built for Digital Architects.
-            </div>
-          </div>
-          <div className="flex gap-x-8">
-            <Link
-              className="text-xs uppercase tracking-widest text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors"
-              to="/privacy"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              className="text-xs uppercase tracking-widest text-white hover:text-[#c2c1ff] transition-colors"
-              to="/terms"
-            >
-              Terms of Service
-            </Link>
-            <a
-              className="text-xs uppercase tracking-widest text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors"
-              href="#"
-            >
-              Cookie Policy
-            </a>
-            <Link
-              className="text-xs uppercase tracking-widest text-[#c7c4d8] hover:text-[#c2c1ff] transition-colors"
-              to="/support"
-            >
-              Support
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function PrivacyPolicy() {
   const handleScrollTo = (e, id) => {
@@ -11,6 +13,7 @@ export default function PrivacyPolicy() {
       className="font-body selection:bg-primary selection:text-on-primary"
       style={{ backgroundColor: "#000000", color: "#e5e2e1" }}
     >
+      <Navbar variant="full" />
       <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         {/* Hero Section */}
         <section className="text-center mb-24">
@@ -341,45 +344,7 @@ export default function PrivacyPolicy() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#0e0e0e] w-full py-12 px-6 mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            <div className="text-lg font-bold text-white font-headline">
-              ResumeForge
-            </div>
-            <p className="font-body text-sm tracking-wide text-[#c7c4d8]">
-              © 2024 ResumeForge. Built for Digital Architects.
-            </p>
-          </div>
-          <nav className="flex flex-wrap justify-center gap-6">
-            <Link
-              className="text-white underline font-body text-sm tracking-wide opacity-100 hover:opacity-80 transition-all"
-              to="/privacy"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              className="text-[#c7c4d8] font-body text-sm tracking-wide hover:text-[#c2c1ff] transition-all"
-              to="/terms"
-            >
-              Terms of Service
-            </Link>
-            <a
-              className="text-[#c7c4d8] font-body text-sm tracking-wide hover:text-[#c2c1ff] transition-all"
-              href="#"
-            >
-              Cookie Policy
-            </a>
-            <Link
-              className="text-[#c7c4d8] font-body text-sm tracking-wide hover:text-[#c2c1ff] transition-all"
-              to="/support"
-            >
-              Support
-            </Link>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

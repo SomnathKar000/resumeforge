@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function Contact() {
   return (
     <div className="font-body selection:bg-primary selection:text-on-primary">
+      <Navbar variant="full" />
       <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
         {/* Hero Section */}
         <section className="text-center mb-24">
@@ -170,37 +173,7 @@ export default function Contact() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-secondary/5 blur-[100px] rounded-full" />
       </div>
 
-      {/* Footer */}
-      <footer className="bg-[#0e0e0e] w-full py-12 px-6 border-t border-white/5">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 max-w-7xl mx-auto text-xs uppercase tracking-widest">
-          <div className="text-lg font-bold text-white tracking-tighter font-headline normal-case">
-            ResumeForge
-          </div>
-          <div className="flex flex-wrap justify-center gap-8 text-[#c7c4d8]">
-            <Link
-              className="hover:text-[#c2c1ff] transition-colors"
-              to="/privacy"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              className="hover:text-[#c2c1ff] transition-colors"
-              to="/terms"
-            >
-              Terms of Service
-            </Link>
-            <a className="hover:text-[#c2c1ff] transition-colors" href="#">
-              Twitter
-            </a>
-            <a className="hover:text-[#c2c1ff] transition-colors" href="#">
-              LinkedIn
-            </a>
-          </div>
-          <div className="text-on-surface-variant/50 text-center md:text-right">
-            © 2024 ResumeForge. Built for Digital Architects.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
