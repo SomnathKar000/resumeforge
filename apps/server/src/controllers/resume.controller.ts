@@ -3,7 +3,7 @@ import AppError from "../utils/AppError";
 
 const generateResume = async (req: Request, res: Response) => {
   const file = req.file;
-  const { jobDescription } = req.body;
+  const { jobDescription } = req.body ?? {};
 
   if (!file) {
     throw new AppError("Please upload a file", 400);
