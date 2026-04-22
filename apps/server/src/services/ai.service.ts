@@ -4,34 +4,35 @@ import { ResumeData } from "../types";
 import { SYSTEM_INSTRUCTION, buildUserPrompt } from "../prompts/tailor.prompt";
 
 // ---------------------------------------------------------------------------
-// Client initialisation
+// Lazy client — initialised on first call, after dotenv has loaded
 // ---------------------------------------------------------------------------
 
-const apiKey = process.env.GEMINI_API_KEY;
+let _model: ReturnType<InstanceType<typeof GoogleGenerativeAI>["getGenerativeModel"]> | null = null;
 
-if (!apiKey) {
-  throw new Error(
-    "GEMINI_API_KEY is not set. Add it to your .env file before starting the server."
-  );
-}
+const getModel = () => {
+  if (_model) return _model;
 
-const genAI = new GoogleGenerativeAI(apiKey);
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new AppError(
+      "GEMINI_API_KEY is not set. Add it to your .env file.",
+      500
+    );
+  }
 
-/**
- * Gemini model used for resume tailoring.
- * gemini-2.0-flash gives a great speed / quality balance for structured JSON tasks.
- */
-const model = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash",
-  systemInstruction: SYSTEM_INSTRUCTION,
-  generationConfig: {
-    // Ask Gemini to return JSON directly (no markdown fences)
-    responseMimeType: "application/json",
-    temperature: 0.4,   // low enough for consistent structure, high enough for quality rewrites
-    topP: 0.9,
-    maxOutputTokens: 8192,
-  },
-});
+  _model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
+    model: "gemini-2.0-flash",
+    systemInstruction: SYSTEM_INSTRUCTION,
+    generationConfig: {
+      responseMimeType: "application/json",
+      temperature: 0.4,
+      topP: 0.9,
+      maxOutputTokens: 8192,
+    },
+  });
+
+  return _model;
+};
 
 // ---------------------------------------------------------------------------
 // Core function
@@ -55,7 +56,7 @@ const tailorResume = async (
   let rawJson: string;
 
   try {
-    const result = await model.generateContent(userPrompt);
+    const result = await getModel().generateContent(userPrompt);
     rawJson = result.response.text();
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
