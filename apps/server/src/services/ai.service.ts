@@ -23,7 +23,7 @@ const getModel = () => {
   }
 
   _model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
-    model: "gemini-2.5-flash",
+    model: process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
     systemInstruction: SYSTEM_INSTRUCTION,
     generationConfig: {
       responseMimeType: "application/json",
