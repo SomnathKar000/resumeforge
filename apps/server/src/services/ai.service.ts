@@ -7,7 +7,9 @@ import { SYSTEM_INSTRUCTION, buildUserPrompt } from "../prompts/tailor.prompt";
 // Lazy client — initialised on first call, after dotenv has loaded
 // ---------------------------------------------------------------------------
 
-let _model: ReturnType<InstanceType<typeof GoogleGenerativeAI>["getGenerativeModel"]> | null = null;
+let _model: ReturnType<
+  InstanceType<typeof GoogleGenerativeAI>["getGenerativeModel"]
+> | null = null;
 
 const getModel = () => {
   if (_model) return _model;
@@ -16,12 +18,12 @@ const getModel = () => {
   if (!apiKey) {
     throw new AppError(
       "GEMINI_API_KEY is not set. Add it to your .env file.",
-      500
+      500,
     );
   }
 
   _model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
-    model: "gemini-2.0-flash",
+    model: "gemini-2.5-flash",
     systemInstruction: SYSTEM_INSTRUCTION,
     generationConfig: {
       responseMimeType: "application/json",
@@ -49,7 +51,7 @@ const getModel = () => {
  */
 const tailorResume = async (
   resumeText: string,
-  jobDescription: string
+  jobDescription: string,
 ): Promise<ResumeData> => {
   const userPrompt = buildUserPrompt(resumeText, jobDescription);
 
@@ -77,7 +79,7 @@ const tailorResume = async (
     console.error("[ai.service] Invalid JSON from Gemini:\n", cleaned);
     throw new AppError(
       "Gemini returned an invalid response. Please try again.",
-      502
+      502,
     );
   }
 
@@ -95,7 +97,7 @@ const tailorResume = async (
     if (!resumeData[key]) {
       throw new AppError(
         `Gemini response is missing the required field: "${key}". Please try again.`,
-        502
+        502,
       );
     }
   }
