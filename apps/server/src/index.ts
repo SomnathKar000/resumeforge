@@ -19,6 +19,9 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 const PORT = process.env.PORT || 4000;
 const API_PREFIX = process.env.API_PREFIX || "/api/v1";
 
+app.get("/health", (_, res) => {
+  res.json({ ok: true });
+});
 app.use(API_PREFIX, resumeRoutes);
 
 app.use(errorHandler);
