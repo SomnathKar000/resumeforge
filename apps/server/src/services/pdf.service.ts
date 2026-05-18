@@ -7,28 +7,44 @@ import AppError from "../utils/AppError";
 
 // ---------------------------------------------------------------------------
 // Concurrency limiter — only 1 Chromium process at a time on 0.5 GB RAM.
-// Requests queue rather than crash with OOM.
 // ---------------------------------------------------------------------------
 const limit = pLimit(1);
 
 // ---------------------------------------------------------------------------
-// Chromium launch args tuned for a memory-constrained container
+// Resolve the Chromium executable path.
+//
+// Priority:
+//   1. CHROMIUM_EXECUTABLE_PATH env var  → used in local dev (macOS/Windows)
+//      e.g. /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+//   2. @sparticuz/chromium               → used in production (Railway/Linux)
 // ---------------------------------------------------------------------------
-const CHROME_ARGS = [
-  ...chromium.args,
+const getExecutablePath = async (): Promise<string> => {
+  if (process.env.CHROMIUM_EXECUTABLE_PATH) {
+    return process.env.CHROMIUM_EXECUTABLE_PATH;
+  }
+  return chromium.executablePath();
+};
+
+// ---------------------------------------------------------------------------
+// Chromium launch args tuned for a memory-constrained container.
+// When running with a local Chrome (dev), chromium.args is still fine to spread.
+// ---------------------------------------------------------------------------
+const EXTRA_ARGS = [
   "--no-sandbox",
   "--disable-setuid-sandbox",
-  "--disable-dev-shm-usage",   // avoid /dev/shm exhaustion in Docker
-  "--disable-gpu",              // no GPU in a headless container
-  "--no-zygote",                // skip zygote process fork → saves ~20 MB
-  "--single-process",           // renderer runs in-process → saves ~40 MB
-  "--js-flags=--max-old-space-size=64", // cap V8 heap inside Chromium
+  "--disable-dev-shm-usage",
+  "--disable-gpu",
+  "--no-zygote",
+  "--single-process",
+  "--js-flags=--max-old-space-size=64",
 ];
 
 /**
- * Renders a ResumeData object to a PDF buffer via Puppeteer + @sparticuz/chromium.
+ * Renders a ResumeData object to a PDF buffer via Puppeteer.
  *
- * Chromium is slimmed (~50 MB) vs the full Puppeteer bundle (~300 MB).
+ * Uses @sparticuz/chromium in production (Railway) and the system Chrome
+ * (via CHROMIUM_EXECUTABLE_PATH env var) in local development.
+ *
  * Only 1 instance runs at a time (p-limit) to stay within 0.5 GB RAM.
  *
  * @param resumeData - Structured resume data from ai.service
@@ -37,29 +53,34 @@ const CHROME_ARGS = [
 const generateResumePDF = (resumeData: ResumeData): Promise<Buffer> =>
   limit(async () => {
     const html = buildResumeHtml(resumeData);
+    const executablePath = await getExecutablePath();
+
+    // Use slimmed args only in production; local Chrome ignores unknown flags
+    // but we keep them harmless for cross-platform consistency.
+    const args = process.env.CHROMIUM_EXECUTABLE_PATH
+      ? ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+      : [...chromium.args, ...EXTRA_ARGS];
 
     let browser;
 
     try {
       browser = await puppeteer.launch({
-        args: CHROME_ARGS,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
+        args,
+        executablePath,
+        headless: true,
       });
 
       const page = await browser.newPage();
 
-      // Load the HTML directly — no network round-trip needed
+      // Load HTML directly — no network round-trip needed
       await page.setContent(html, { waitUntil: "networkidle0" });
 
       const pdfBuffer = await page.pdf({
-        format: "Letter",      // 8.5 × 11 in — standard US resume paper
+        format: "Letter",
         printBackground: true,
-        // Margins are handled by @page CSS in the template
         margin: { top: "0", bottom: "0", left: "0", right: "0" },
-        // scale < 1 shrinks content so everything fits on one page
         scale: 0.92,
-        pageRanges: "1",       // hard-limit to page 1
+        pageRanges: "1",
       });
 
       return Buffer.from(pdfBuffer);
@@ -67,7 +88,6 @@ const generateResumePDF = (resumeData: ResumeData): Promise<Buffer> =>
       const message = err instanceof Error ? err.message : String(err);
       throw new AppError(`PDF generation failed: ${message}`, 500);
     } finally {
-      // Always close the browser, even on error
       if (browser) await browser.close();
     }
   });
