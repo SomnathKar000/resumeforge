@@ -2,7 +2,7 @@ import express from "express";
 import resumeRoutes from "./routes/v1/resume.route";
 import cors from "cors";
 import dotenv from "dotenv";
-import { generalLimiter, generateLimiter } from "./middlewares/rateLimiter";
+import { generalLimiter, generateLimiter } from "./middlewares/rate.limiter";
 import { errorHandler, notFoundHandler } from "./middlewares/error.handler";
 
 dotenv.config();
